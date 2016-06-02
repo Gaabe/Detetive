@@ -25,7 +25,7 @@ public class DetetiveServer {
      * @param args the command line arguments
      * @throws java.io.IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         DetetiveServer newGame = new DetetiveServer();
         try{
             newGame.setServer(new ServerSocket(4321));
@@ -42,6 +42,8 @@ public class DetetiveServer {
         Thread t2 = new Thread(acceptClients);
         t1.start();
         t2.start();
+        t1.join();
+        t2.join();
     }
 
     /**

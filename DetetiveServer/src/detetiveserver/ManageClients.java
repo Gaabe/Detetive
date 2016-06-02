@@ -7,6 +7,7 @@ package detetiveserver;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.ServerSocket;
@@ -51,7 +52,19 @@ public class ManageClients extends Thread{
             }
             if(!(newClients.equals(clients))){
                 this.clients = newClients;
+                try {
+                    informClients();
+                } catch (IOException ex) {
+                    Logger.getLogger(ManageClients.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }            
+        }
+    }
+    
+    public void informClients() throws IOException{
+        for(Socket client : clients){
+            ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
+            out.writeObject(clients);
         }
     }
 }
