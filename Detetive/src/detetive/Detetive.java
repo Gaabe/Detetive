@@ -18,4 +18,12 @@ public class Detetive {
         // TODO code application logic here
     }
     
+    public void connectToServer(){
+        
+    }
+    
+    public void makeAccusation(){
+        
+    }
+    
 }

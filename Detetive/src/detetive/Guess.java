@@ -5,10 +5,22 @@
  */
 package detetive;
 
+
 /**
  *
  * @author Gabe
  */
 public class Guess {
-    
+    public enum Person{
+    CoronelMostarda, DonaBranca, SrMarinho, DonaVioleta, ProfessorBlack, SrtaRosa
+    }
+    public enum Place{
+        Biblioteca, Cozinha, Hall, Escritório, Entrada , SalaDeEstar, SalaDeJantar, SalaDeMusica, SalaoDeFestas, SalaoDeJogos
+    }
+    public enum Weapon{
+        Castical, Cano, ChaveInglesa, Corda, Punhal, Revolver, Faca
+    }
+    private Person person;
+    private Place place;
+    private Weapon weapon;
 }
