@@ -12,7 +12,7 @@ package detetive;
  */
 public class Guess {
     public enum Person{
-    CoronelMostarda, DonaBranca, SrMarinho, DonaVioleta, ProfessorBlack, SrtaRosa
+        CoronelMostarda, DonaBranca, SrMarinho, DonaVioleta, ProfessorBlack, SrtaRosa
     }
     public enum Place{
         Biblioteca, Cozinha, Hall, Escritório, Entrada , SalaDeEstar, SalaDeJantar, SalaDeMusica, SalaoDeFestas, SalaoDeJogos
