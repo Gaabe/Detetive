@@ -5,10 +5,9 @@
  */
 package detetiveserver;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -24,8 +23,9 @@ public class DetetiveServer {
             
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         DetetiveServer newGame = new DetetiveServer();
         try{
             newGame.setServer(new ServerSocket(4321));
@@ -34,8 +34,10 @@ public class DetetiveServer {
             System.out.println("Could not listen on port 4321");
             System.exit(-1);
         }
-        ManageClients manageClients = new ManageClients(newGame.server, newGame.clients);
-        AcceptClients acceptClients = new AcceptClients(newGame.server, newGame.clients);
+        PipedInputStream pis = new PipedInputStream();
+        PipedOutputStream pos = new PipedOutputStream(pis);
+        ManageClients manageClients = new ManageClients(newGame.server, newGame.clients, pos, pis);
+        AcceptClients acceptClients = new AcceptClients(newGame.server, newGame.clients, pos, pis);
         Thread t1 = new Thread(manageClients);
         Thread t2 = new Thread(acceptClients);
         t1.start();

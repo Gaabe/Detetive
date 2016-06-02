@@ -5,45 +5,53 @@
  */
 package detetiveserver;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Gabe
  */
-public class ManageClients implements Runnable{
-    private ServerSocket server;
+public class ManageClients extends Thread{
+    private final ServerSocket server;
     private ArrayList<Socket> clients;
+    private final PipedOutputStream pos;
+    private final PipedInputStream pis;
    
-    ManageClients(ServerSocket server, ArrayList<Socket> clients){
+    ManageClients(ServerSocket server, ArrayList<Socket> clients, PipedOutputStream pos, PipedInputStream pis){
         this.server = server;
         this.clients = clients;
+        this.pos = pos;
+        this.pis = pis;
+
     }
     
     @Override
     public void run(){
-        BufferedReader in = null;
-        PrintWriter out = null;
+        ObjectInputStream ois = null;
+        ArrayList<Socket> newClients = new ArrayList();
         try{
-            in = new BufferedReader(new InputStreamReader(clients.get(0).getInputStream()));
-            //out = new PrintWriter(game.getClients().getOutputStream(), true);
+            ois = new ObjectInputStream(pis);
         } catch (IOException e) {
-            System.out.println("Buffer/Writer failed");
+            System.out.println("Could not create object input stream");
             System.exit(-1);
         }
         while(true){
-            /*try{
-                //Tratar lista de clients aqui!
-            } catch (IOException e) {
-                System.out.println("Read failed");
-                System.exit(-1);
-            }*/
+            try {
+                newClients = (ArrayList<Socket>) ois.readObject();
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(ManageClients.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(!(newClients.equals(clients))){
+                this.clients = newClients;
+            }            
         }
     }
 }
