@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 
 /**
@@ -18,51 +19,55 @@ import java.net.Socket;
  * @author Gabe
  */
 public class DetetiveServer {
-    ServerSocket server;
-    Socket client;
+    private ServerSocket server;
+    private ArrayList<Socket> clients;
             
-
-  public void listenSocket(){
-    try{
-        server = new ServerSocket(4321); 
-    } catch (IOException e) {
-        System.out.println("Could not listen on port 4321");
-        System.exit(-1);
-    }
-
-    try{
-        client = server.accept();
-    } catch (IOException e) {
-        System.out.println("Accept failed: 4321");
-        System.exit(-1);
-    }
-    BufferedReader in = null;
-    PrintWriter out = null;
-    try{
-        int a = 0;
-        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        out = new PrintWriter(client.getOutputStream(), true);
-    } catch (IOException e) {
-        System.out.println("Read failed");
-        System.exit(-1);
-    }
-
-    while(true){
-        try{
-            String line = in.readLine();
-            //Tratar lista de clients aqui!
-                 
-        } catch (IOException e) {
-            System.out.println("Read failed");
-            System.exit(-1);
-        }
-    }
-  }
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        DetetiveServer newGame = new DetetiveServer();
+        try{
+            newGame.setServer(new ServerSocket(4321));
+            newGame.setClients(new ArrayList());
+        } catch (IOException e) {
+            System.out.println("Could not listen on port 4321");
+            System.exit(-1);
+        }
+        ManageClients manageClients = new ManageClients(newGame.server, newGame.clients);
+        AcceptClients acceptClients = new AcceptClients(newGame.server, newGame.clients);
+        Thread t1 = new Thread(manageClients);
+        Thread t2 = new Thread(acceptClients);
+        t1.start();
+        t2.start();
+    }
+
+    /**
+     * @return the server
+     */
+    public ServerSocket getServer() {
+        return server;
+    }
+
+    /**
+     * @param server the server to set
+     */
+    public void setServer(ServerSocket server) {
+        this.server = server;
+    }
+
+    /**
+     * @return the clients
+     */
+    public ArrayList<Socket> getClients() {
+        return clients;
+    }
+
+    /**
+     * @param clients the clients to set
+     */
+    public void setClients(ArrayList<Socket> clients) {
+        this.clients = clients;
     }
     
 }
