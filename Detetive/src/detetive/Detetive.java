@@ -48,12 +48,19 @@ public class Detetive {
     }
     
     public void startGame(ObjectOutputStream out){
-        //out.writeObject(START); MANDAR SINAL DE START PRA TODOS OS PEERS
+        //out.writeObject(START);  PRO SERVIDOR
     }
     
     public void makeAccusation(ObjectOutputStream out) throws IOException{
         Guess guess = new Guess(Guess.Person.CoronelMostarda, Guess.Place.Biblioteca, Guess.Weapon.Cano);
-        out.writeObject(guess);
+        out.writeObject(guess); //PARA TODOS OS PEERS
+        //Se acusação certa, jogo termina
+        //Se acusação errada, jogador sai do jogo
+    }
+    
+    public void makeGuess(ObjectOutputStream out) throws IOException{
+        Guess guess = new Guess(Guess.Person.CoronelMostarda, Guess.Place.Biblioteca, Guess.Weapon.Cano);
+        out.writeObject(guess); //PARA TODOS OS PEERS
     }
     
 }
