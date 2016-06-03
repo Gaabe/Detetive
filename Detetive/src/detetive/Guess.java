@@ -23,4 +23,10 @@ public class Guess {
     private Person person;
     private Place place;
     private Weapon weapon;
+    
+    public Guess(Person person, Place place, Weapon weapon){
+        this.person = person;
+        this.place = place;
+        this.weapon = weapon;
+    }
 }
