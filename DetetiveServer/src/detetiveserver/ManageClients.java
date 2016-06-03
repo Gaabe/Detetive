@@ -36,17 +36,28 @@ public class ManageClients extends Thread{
     
     @Override
     public void run(){
-        ObjectInputStream ois = null;
+        ObjectInputStream pipeois = null;
+        for(Socket client : clients){
+            try {
+                ObjectInputStream clientois = new ObjectInputStream(client.getInputStream());
+                if(clientois.readObject().equals("Start")){
+                    informClients();
+                    informGameStart();
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(ManageClients.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         ArrayList<Socket> newClients = new ArrayList();
         try{
-            ois = new ObjectInputStream(pis);
+            pipeois = new ObjectInputStream(pis);
         } catch (IOException e) {
             System.out.println("Could not create object input stream");
             System.exit(-1);
         }
         while(true){
             try {
-                newClients = (ArrayList<Socket>) ois.readObject();
+                newClients = (ArrayList<Socket>) pipeois.readObject();
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(ManageClients.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -65,6 +76,13 @@ public class ManageClients extends Thread{
         for(Socket client : clients){
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
             out.writeObject(clients);
+        }
+    }
+    
+    public void informGameStart() throws IOException{
+        for(Socket client : clients){
+            ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
+            out.writeObject("Game Start");
         }
     }
 }
