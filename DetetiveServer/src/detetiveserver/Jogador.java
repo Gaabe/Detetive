@@ -5,13 +5,14 @@
  */
 package detetiveserver;
 
+import java.io.Serializable;
 import java.net.Socket;
 
 /**
  *
  * @author Gabe
  */
-public class Jogador {
+public class Jogador implements Serializable{
     private Socket socket;
     private String name;
     

@@ -36,11 +36,6 @@ public class AcceptClients extends Thread{
     @Override
     public void run(){
         ObjectOutputStream oos = null;
-        try {
-            oos = new ObjectOutputStream(pos);
-        } catch (IOException ex) {
-            System.out.println("Could not create object output stream");
-        }
         while(true){
             try{
                 Jogador novoJogador = new Jogador(null, "");
@@ -49,7 +44,9 @@ public class AcceptClients extends Thread{
                 Thread.sleep(2000);
                 novoJogador.setName((String) clientis.readObject());
                 clients.add(novoJogador);
+                oos = new ObjectOutputStream(pos);
                 oos.writeObject(clients);
+                System.out.println("New client connected");
             } catch (IOException e) {
                 System.out.println("Accept failed: 4321");
             } catch (ClassNotFoundException | InterruptedException ex) {

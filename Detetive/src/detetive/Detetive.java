@@ -11,58 +11,43 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Gabe
  */
 public class Detetive {
 
-    private Socket mainserver;
-    private ArrayList<ServerSocket> peerserver;
-    private ArrayList<Jogador> peers = new ArrayList();
-    private TelaInicio telaDeJogo;
+    private static Socket mainServer;
+    private static ServerSocket peerServer;
+    private static ArrayList<Jogador> peersSockets;
+    private static TelaInicio telaDeJogo;
+    private static String name;
+    private static ArrayList<Player> peers;
 
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
      * @throws java.lang.InterruptedException
      */
-    public static void main(String[] args) throws IOException, InterruptedException {
-        Detetive det = new Detetive();
+    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
+
+        peerServer = new ServerSocket(1234);
+        telaDeJogo = new TelaInicio();
+        Detetive.mainServer = new Socket("127.0.0.1", 4321);
+        ObjectOutputStream oos = new ObjectOutputStream(Detetive.mainServer.getOutputStream());
+        JFrame frame = new JFrame("pop up frame");
+        Detetive.name = JOptionPane.showInputDialog(Detetive.telaDeJogo, "Choose a username");
+        oos.writeObject(name);
+        System.out.println("connected to the server");
         
-        ObjectInputStream in = new ObjectInputStream(det.getMainserver().getInputStream());
-        ObjectOutputStream out = new ObjectOutputStream(det.getMainserver().getOutputStream()); //OUTPUT TEM QUE SER 1 PRA CADA PEER
-        
-        try{
-            det.connectToServer(in, out);
-        }catch(IOException | ClassNotFoundException e){
-        }
-        //conectado com o servidor
-        TelaInicio novatela = new TelaInicio(det);
-        
-        //COMO FAZER O FUNCIONAMENTO EM TURNOS
-//          while !jogoAcabou
-//              is my turn?
-//                  MEU TURNO (criar o palpite ou acusação e lançar pra galera) [makeGuess][makeAccusation]
-//                  for entre os outros jogadores pra checar se eles tem algo do palpite feito
-//                  if final da lista, volte pro inicio (ArrayList ciclico?)
-//                  se não incrementa posição da lista de sockets
-//                  passa o turno
+        UpdatePeers updatePeers = new UpdatePeers();       
+        Thread t1 = new Thread(updatePeers);
+        t1.start();
 
     }
     
-    public void connectToServer(ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException, InterruptedException{
-        setMainserver(new Socket("127.0.0.1", 4321));
-        ObjectOutputStream oos = new ObjectOutputStream(getMainserver().getOutputStream());
-        sendClientName(oos);
-        while(in.readObject() != "Game Start"){
-            setPeers((ArrayList<Jogador>) in.readObject());
-            //listar na tela os pares conectados USAR SWING
-//            if(/*Swing variavel*/){
-//                out.writeObject("Start");
-//            }
-        }
-    }
     
     public void startGame(ObjectOutputStream out){
        //jogo rolando
@@ -75,7 +60,7 @@ public class Detetive {
     
     public void makeAccusation(ObjectOutputStream out) throws IOException{
         Guess guess = new Guess(Guess.Person.CoronelMostarda, Guess.Place.Biblioteca, Guess.Weapon.Cano);
-        for(Jogador client : getPeers()){
+        for(Jogador client : Detetive.peersSockets){
             ObjectOutputStream out1 = new ObjectOutputStream(client.getSocket().getOutputStream());
             out1.writeObject(guess);
         }
@@ -85,70 +70,68 @@ public class Detetive {
     
     public void makeGuess(ObjectOutputStream out) throws IOException{
         Guess guess = new Guess(Guess.Person.CoronelMostarda, Guess.Place.Biblioteca, Guess.Weapon.Cano);
-        for(Jogador client : getPeers()){
+        for(Jogador client : Detetive.peersSockets){
             ObjectOutputStream out1 = new ObjectOutputStream(client.getSocket().getOutputStream());
             out1.writeObject(guess);
         }
     }
 
-    private void sendClientName(ObjectOutputStream oos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     /**
      * @return the mainserver
      */
-    public Socket getMainserver() {
-        return mainserver;
+    public static Socket getMainserver() {
+        return mainServer;
     }
 
     /**
      * @param mainserver the mainserver to set
      */
-    public void setMainserver(Socket mainserver) {
-        this.mainserver = mainserver;
+    public static void setMainserver(Socket mainserver) {
+        Detetive.mainServer = mainserver;
     }
 
     /**
      * @return the peerserver
      */
-    public ArrayList<ServerSocket> getPeerserver() {
-        return peerserver;
+    public static ServerSocket getPeerserver() {
+        return peerServer;
     }
 
     /**
      * @param peerserver the peerserver to set
      */
-    public void setPeerserver(ArrayList<ServerSocket> peerserver) {
-        this.peerserver = peerserver;
+    public static void setPeerserver(ServerSocket peerserver) {
+        Detetive.peerServer = peerserver;
     }
 
     /**
      * @return the peers
      */
-    public ArrayList<Jogador> getPeers() {
+    public static ArrayList<Player> getPeers() {
         return peers;
     }
 
     /**
      * @param peers the peers to set
      */
-    public void setPeers(ArrayList<Jogador> peers) {
-        this.peers = peers;
+    public static  void setPeers(ArrayList<Player> peers) {
+        Detetive.peers = peers;
     }
 
     /**
      * @return the telaDeJogo
      */
-    public TelaInicio getTelaDeJogo() {
+    public static TelaInicio getTelaDeJogo() {
         return telaDeJogo;
     }
 
     /**
      * @param telaDeJogo the telaDeJogo to set
      */
-    public void setTelaDeJogo(TelaInicio telaDeJogo) {
-        this.telaDeJogo = telaDeJogo;
+    public static void setTelaDeJogo(TelaInicio telaDeJogo) {
+        Detetive.telaDeJogo = telaDeJogo;
     }
+
     
 }

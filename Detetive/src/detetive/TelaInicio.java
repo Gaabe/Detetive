@@ -22,8 +22,7 @@ public class TelaInicio extends javax.swing.JFrame {
      * Creates new form Tela
      * @param detetive
      */
-    public TelaInicio(Detetive detetive) {
-        this.detetive = detetive;
+    public TelaInicio() {
         initComponents();
     }
 

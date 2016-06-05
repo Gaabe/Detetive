@@ -3,36 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package detetive;
+package detetiveserver;
 
-import java.io.Serializable;
-import java.net.Socket;
+import java.net.InetAddress;
 
 /**
  *
  * @author Gabe
  */
-public class Jogador implements Serializable{
-    private Socket socket;
+public class Player {
+    private InetAddress ip;
     private String name;
-    
-    Jogador(Socket socket, String name){
-        this.socket = socket;
-        this.name = name;
+
+    /**
+     * @return the ip
+     */
+    public InetAddress getIp() {
+        return ip;
     }
 
     /**
-     * @return the socket
+     * @param ip the ip to set
      */
-    public Socket getSocket() {
-        return socket;
-    }
-
-    /**
-     * @param socket the socket to set
-     */
-    public void setSocket(Socket socket) {
-        this.socket = socket;
+    public void setIp(InetAddress ip) {
+        this.ip = ip;
     }
 
     /**
@@ -50,4 +44,3 @@ public class Jogador implements Serializable{
     }
     
 }
-
