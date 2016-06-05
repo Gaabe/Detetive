@@ -5,6 +5,7 @@
  */
 package detetive;
 
+import detetiveutils.Guess;
 import detetiveutils.Jogador;
 import detetiveutils.Player;
 import java.io.IOException;

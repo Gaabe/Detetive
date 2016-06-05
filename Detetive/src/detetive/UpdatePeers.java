@@ -22,19 +22,21 @@ public class UpdatePeers extends Thread{
     @Override
     public void run(){
         ObjectInputStream ois = null;
-        try {
-            ois = new ObjectInputStream(Detetive.getMainserver().getInputStream());
-        } catch (IOException ex) {
-            Logger.getLogger(UpdatePeers.class.getName()).log(Level.SEVERE, null, ex);
-        }
         while(true){
             try {
+                ois = new ObjectInputStream(Detetive.getMainserver().getInputStream());
                 Detetive.setPeers((ArrayList<Player>) ois.readObject());
                 JOptionPane.showConfirmDialog(Detetive.getTelaDeJogo(), "Peer list refreshed");
             } catch (IOException ex) {
                 Logger.getLogger(UpdatePeers.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(UpdatePeers.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    ois.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(UpdatePeers.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }
