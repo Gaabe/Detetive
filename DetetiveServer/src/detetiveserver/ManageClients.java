@@ -22,11 +22,11 @@ import java.util.logging.Logger;
  */
 public class ManageClients extends Thread{
     private final ServerSocket server;
-    private ArrayList<Socket> clients;
+    private ArrayList<Jogador> clients;
     private final PipedOutputStream pos;
     private final PipedInputStream pis;
    
-    ManageClients(ServerSocket server, ArrayList<Socket> clients, PipedOutputStream pos, PipedInputStream pis){
+    ManageClients(ServerSocket server, ArrayList<Jogador> clients, PipedOutputStream pos, PipedInputStream pis){
         this.server = server;
         this.clients = clients;
         this.pos = pos;
@@ -37,10 +37,10 @@ public class ManageClients extends Thread{
     @Override
     public void run(){
         ObjectInputStream pipeois = null;
-        for(Socket client : clients){
+        for(Jogador client : clients){
             try {
-                ObjectInputStream clientois = new ObjectInputStream(client.getInputStream());
-                if(clientois.readObject().equals("Start")){
+                ObjectInputStream clientois = new ObjectInputStream(client.getSocket().getInputStream());
+                if(clientois.readObject().equals("Game Start")){
                     informClients();
                     informGameStart();
                 }
@@ -48,7 +48,7 @@ public class ManageClients extends Thread{
                 Logger.getLogger(ManageClients.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        ArrayList<Socket> newClients = new ArrayList();
+        ArrayList<Jogador> newClients = new ArrayList();
         try{
             pipeois = new ObjectInputStream(pis);
         } catch (IOException e) {
@@ -57,7 +57,7 @@ public class ManageClients extends Thread{
         }
         while(true){
             try {
-                newClients = (ArrayList<Socket>) pipeois.readObject();
+                newClients = (ArrayList<Jogador>) pipeois.readObject();
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(ManageClients.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -73,15 +73,15 @@ public class ManageClients extends Thread{
     }
     
     public void informClients() throws IOException{
-        for(Socket client : clients){
-            ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
+        for(Jogador client : clients){
+            ObjectOutputStream out = new ObjectOutputStream(client.getSocket().getOutputStream());
             out.writeObject(clients);
         }
     }
     
     public void informGameStart() throws IOException{
-        for(Socket client : clients){
-            ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
+        for(Jogador client : clients){
+            ObjectOutputStream out = new ObjectOutputStream(client.getSocket().getOutputStream());
             out.writeObject("Game Start");
         }
     }

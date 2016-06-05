@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 
 
@@ -19,11 +18,12 @@ import java.util.ArrayList;
  */
 public class DetetiveServer {
     private ServerSocket server;
-    private ArrayList<Socket> clients;
+    private ArrayList<Jogador> clients;
             
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws IOException, InterruptedException {
         DetetiveServer newGame = new DetetiveServer();
@@ -63,14 +63,14 @@ public class DetetiveServer {
     /**
      * @return the clients
      */
-    public ArrayList<Socket> getClients() {
+    public ArrayList<Jogador> getClients() {
         return clients;
     }
 
     /**
      * @param clients the clients to set
      */
-    public void setClients(ArrayList<Socket> clients) {
+    public void setClients(ArrayList<Jogador> clients) {
         this.clients = clients;
     }
     

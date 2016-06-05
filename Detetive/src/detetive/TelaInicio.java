@@ -6,19 +6,24 @@
 package detetive;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Igor
  */
 public class TelaInicio extends javax.swing.JFrame {
+    Detetive detetive;
 
     /**
      * Creates new form Tela
+     * @param detetive
      */
-    public TelaInicio() {
+    public TelaInicio(Detetive detetive) {
+        this.detetive = detetive;
         initComponents();
     }
 
@@ -133,7 +138,14 @@ public class TelaInicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            ObjectOutputStream oos = new ObjectOutputStream(detetive.getMainserver().getOutputStream());
+            oos.writeObject("Game Start");
+        } catch (IOException ex) {
+            Logger.getLogger(TelaInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         TelaJogo jogo = new TelaJogo();
         this.setSize(1280,720);
         jPanel1.setSize(1280,720);
@@ -175,8 +187,8 @@ public class TelaInicio extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                new TelaInicio().setVisible(true);
             }
         });
     }
