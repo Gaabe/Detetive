@@ -101,12 +101,12 @@ public class DetetiveServer {
     }
     
     public static void informClients() throws IOException, SocketException{
-        ArrayList<InetAddress> clientsip = new ArrayList();
+        ArrayList<Player> clientsip = new ArrayList();
         for(Jogador client : clients){
             Player newPlayer = new Player();
             newPlayer.setIp(client.getSocket().getInetAddress());
             newPlayer.setName(client.getName());
-            clientsip.add(client.getSocket().getInetAddress());
+            clientsip.add(newPlayer);
         }
         for(Jogador client : clients){
             ObjectOutputStream out = new ObjectOutputStream(client.getSocket().getOutputStream());

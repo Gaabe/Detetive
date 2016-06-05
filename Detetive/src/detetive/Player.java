@@ -3,15 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package detetive;
+package detetiveserver;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 
 /**
  *
  * @author Gabe
  */
-public class Player {
+public class Player implements Serializable{
     private InetAddress ip;
     private String name;
 
