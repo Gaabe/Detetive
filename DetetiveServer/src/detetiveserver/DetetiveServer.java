@@ -12,6 +12,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,7 +100,7 @@ public class DetetiveServer {
         this.clients = clients;
     }
     
-    public static void informClients() throws IOException{
+    public static void informClients() throws IOException, SocketException{
         ArrayList<InetAddress> clientsip = new ArrayList();
         for(Jogador client : clients){
             Player newPlayer = new Player();

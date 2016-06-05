@@ -22,6 +22,7 @@ public class Detetive {
     private static Socket mainServer;
     private static ServerSocket peerServer;
     private static ArrayList<Jogador> peersSockets;
+    private static ArrayList<Jogador> peersAcceptedSockets;
     private static TelaInicio telaDeJogo;
     private static String name;
     private static ArrayList<Player> peers;
@@ -45,17 +46,53 @@ public class Detetive {
         UpdatePeers updatePeers = new UpdatePeers();       
         Thread t1 = new Thread(updatePeers);
         t1.start();
+        
+        AcceptPeers acceptPeers = new AcceptPeers();
+        Thread t2 = new Thread(acceptPeers);
+        t2.start();
+        
+        if (false){
+            startGame();
+        }
 
     }
     
     
-    public void startGame(ObjectOutputStream out){
+    public static void startGame() throws IOException{
        //jogo rolando
        /*
        OU SERVIDOR, OU PLAYER QUE DEU START (ADICIONAR VARIAVEL PARA CHECAR ISSO -> PREFERENCIAL)
        pegar do Guess a lista de pessoas, lugares e armas, embaralhar e dividir para os players
        DEFINIR OS TURNOS (QUEM COMEÇAR, ORDEM, ETC.)
        */
+       Detetive.mainServer.close();
+       connectToPeers();
+       
+    }
+
+    private static void connectToPeers() throws IOException {
+        //Função para pegar lista de ips e nomes e conectar com os pares
+        for(Player player : peers){
+            Jogador newJogador = new Jogador(new Socket(player.getIp(), 1234), player.getName());
+            Detetive.peersSockets.add(newJogador);
+            ObjectOutputStream oos = new ObjectOutputStream(newJogador.getSocket().getOutputStream());
+            oos.writeObject(Detetive.name);
+            
+        }
+    }
+
+    /**
+     * @return the peersAcceptedSockets
+     */
+    public static ArrayList<Jogador> getPeersAcceptedSockets() {
+        return peersAcceptedSockets;
+    }
+
+    /**
+     * @param aPeersAcceptedSockets the peersAcceptedSockets to set
+     */
+    public static void setPeersAcceptedSockets(ArrayList<Jogador> aPeersAcceptedSockets) {
+        peersAcceptedSockets = aPeersAcceptedSockets;
     }
     
     public void makeAccusation(ObjectOutputStream out) throws IOException{
@@ -78,28 +115,28 @@ public class Detetive {
 
 
     /**
-     * @return the mainserver
+     * @return the mainServer
      */
     public static Socket getMainserver() {
         return mainServer;
     }
 
     /**
-     * @param mainserver the mainserver to set
+     * @param mainserver the mainServer to set
      */
     public static void setMainserver(Socket mainserver) {
         Detetive.mainServer = mainserver;
     }
 
     /**
-     * @return the peerserver
+     * @return the peerServer
      */
     public static ServerSocket getPeerserver() {
         return peerServer;
     }
 
     /**
-     * @param peerserver the peerserver to set
+     * @param peerserver the peerServer to set
      */
     public static void setPeerserver(ServerSocket peerserver) {
         Detetive.peerServer = peerserver;
