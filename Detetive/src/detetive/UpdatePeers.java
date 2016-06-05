@@ -25,8 +25,7 @@ public class UpdatePeers extends Thread{
             try {
                 ObjectInputStream ois = new ObjectInputStream(Detetive.getMainserver().getInputStream());
                 Detetive.setPeers((ArrayList<Player>) ois.readObject());
-                JOptionPane.showConfirmDialog(Detetive.getTelaDeJogo(), "Peer list refreshed");
-                ois.close();
+                JOptionPane.showMessageDialog(Detetive.getTelaDeJogo(), "Peer list refreshed");
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(UpdatePeers.class.getName()).log(Level.SEVERE, null, ex);
             }
