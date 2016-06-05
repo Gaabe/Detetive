@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package detetive;
+package detetiveutils;
 
 import java.io.Serializable;
 import java.net.Socket;
@@ -16,7 +16,7 @@ public class Jogador implements Serializable{
     private Socket socket;
     private String name;
     
-    Jogador(Socket socket, String name){
+    public Jogador(Socket socket, String name){
         this.socket = socket;
         this.name = name;
     }

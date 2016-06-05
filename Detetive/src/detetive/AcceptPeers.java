@@ -5,6 +5,10 @@
  */
 package detetive;
 
+import detetiveutils.Jogador;
+import detetiveutils.Player;
+import detetiveutils.Player;
+import detetiveutils.Jogador;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.logging.Level;
