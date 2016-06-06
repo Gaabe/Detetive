@@ -82,7 +82,7 @@ public class Detetive {
         for(Player player : peers){
             if(!(player.getName().equals(name))){
                 System.out.println(player.getIp().toString().subSequence(1, player.getIp().toString().length()));
-                Jogador newJogador = new Jogador(new Socket(player.getIp(), 1234), player.getName());
+                Jogador newJogador = new Jogador(new Socket((String) player.getIp().toString().subSequence(1, player.getIp().toString().length()), 1234), player.getName());
                 Detetive.peersSockets.add(newJogador);
                 ObjectOutputStream oos = new ObjectOutputStream(newJogador.getSocket().getOutputStream());
                 oos.writeObject(Detetive.getName());
