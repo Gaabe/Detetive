@@ -136,11 +136,13 @@ public class TelaInicio extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
+            AcceptPeers.gameStarted = true;
             Detetive.startGame();
         } catch (IOException ex) {
             Logger.getLogger(TelaInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        /*
         TelaJogo jogo = new TelaJogo();
         this.setSize(1280,720);
         jPanel1.setSize(1280,720);
@@ -148,7 +150,7 @@ public class TelaInicio extends javax.swing.JFrame {
         jPanel1.removeAll();
         jPanel1.add(jogo, BorderLayout.CENTER);
         jPanel1.repaint();
-
+        */
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -197,4 +199,14 @@ public class TelaInicio extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    void startGame() {
+        TelaJogo jogo = new TelaJogo();
+        this.setSize(1280,720);
+        jPanel1.setSize(1280,720);
+        jogo.setSize(jPanel1.getWidth(), jPanel1.getHeight());
+        jPanel1.removeAll();
+        jPanel1.add(jogo, BorderLayout.CENTER);
+        jPanel1.repaint();
+    }
 }

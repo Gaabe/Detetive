@@ -40,8 +40,8 @@ public class Detetive {
      */
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 
-        peerServer = new ServerSocket(1234);
-        Detetive.mainServer = new Socket("191.40.88.64", 4321);
+        peerServer = new ServerSocket(10120);
+        Detetive.mainServer = new Socket("127.0.0.1", 4321);
         ObjectOutputStream oos = new ObjectOutputStream(Detetive.mainServer.getOutputStream());
         JFrame frame = new JFrame("pop up frame");
         Detetive.setName(JOptionPane.showInputDialog(Detetive.telaDeJogo, "Choose a username"));
@@ -75,6 +75,7 @@ public class Detetive {
         //t1.interrupt();
         //Detetive.mainServer.close();
         connectToPeers();
+        telaDeJogo.startGame();
     }
 
     private static void connectToPeers() throws IOException {
@@ -82,7 +83,7 @@ public class Detetive {
         for(Player player : peers){
             if(!(player.getName().equals(name))){
                 System.out.println(player.getIp().toString().subSequence(1, player.getIp().toString().length()));
-                Jogador newJogador = new Jogador(new Socket((String) player.getIp().toString().subSequence(1, player.getIp().toString().length()), 1234), player.getName());
+                Jogador newJogador = new Jogador(new Socket((String) player.getIp().toString().subSequence(1, player.getIp().toString().length()), 10120), player.getName());
                 Detetive.peersSockets.add(newJogador);
                 ObjectOutputStream oos = new ObjectOutputStream(newJogador.getSocket().getOutputStream());
                 oos.writeObject(Detetive.getName());

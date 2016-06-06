@@ -19,6 +19,7 @@ import java.util.logging.Logger;
  * @author Gabe
  */
 class AcceptPeers extends Thread {
+    public static boolean gameStarted = false;
     @Override
     public void run(){
         while(true){
@@ -29,6 +30,10 @@ class AcceptPeers extends Thread {
                 ObjectInputStream ois = new ObjectInputStream(newJogador.getSocket().getInputStream());
                 newJogador.setName((String) ois.readObject());
                 System.out.println("Player name included");
+                if(!gameStarted){
+                    Detetive.startGame();
+                    gameStarted = true;
+                }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(AcceptPeers.class.getName()).log(Level.SEVERE, null, ex);
             }
