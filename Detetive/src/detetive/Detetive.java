@@ -25,7 +25,7 @@ public class Detetive {
     private static Socket mainServer;
     private static ServerSocket peerServer;
     private static ArrayList<Jogador> peersSockets;
-    private static ArrayList<Jogador> peersAcceptedSockets;
+    private static ArrayList<Jogador> peersAcceptedSockets = new ArrayList();
     private static TelaInicio telaDeJogo;
     private static String name;
     private static ArrayList<Player> peers;
