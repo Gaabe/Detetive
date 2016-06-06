@@ -5,12 +5,14 @@
  */
 package detetiveutils;
 
+import java.io.Serializable;
+
 
 /**
  *
  * @author Gabe
  */
-public class Guess {
+public class Guess implements Serializable {
     
     private String name;
     private int chute;

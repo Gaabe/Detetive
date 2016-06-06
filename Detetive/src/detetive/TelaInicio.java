@@ -234,6 +234,7 @@ public class TelaInicio extends javax.swing.JFrame {
     void showGuess(Guess guess) {
         DefaultListModel listmodel = (DefaultListModel) telaJogo.getjList1().getModel();
         listmodel.addElement(guess.getName()+ " " + guess.getChute());
+        telaJogo.getjList1().setModel(listmodel);
     }
 
 }

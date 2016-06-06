@@ -78,7 +78,7 @@ public class Detetive {
         while(porrinhas < 0 || porrinhas > 3){
             porrinhas = parseInt(JOptionPane.showInputDialog("Bote entre 0 e 3 porrinhas:"));
         }
-        while(turn < Detetive.getPeers().size()){
+        while(turn < Detetive.getPeersAcceptedSockets().size()){
             if(turn == myTurn){
                 Detetive.guess();
             }else{
@@ -149,7 +149,7 @@ public class Detetive {
     private static void guess() throws IOException {
         Detetive.chute = parseInt(JOptionPane.showInputDialog("Chute um numero:"));
         Guess guess = new Guess(Detetive.name, chute, porrinhas);
-        for(Jogador jogador : Detetive.peersAcceptedSockets){
+        for(Jogador jogador : Detetive.peersSockets){
             ObjectOutputStream oos = new ObjectOutputStream(jogador.getSocket().getOutputStream());
             oos.writeObject(guess);
         }
@@ -157,7 +157,7 @@ public class Detetive {
     }
 
     private static void listen() throws IOException, ClassNotFoundException{
-        ObjectInputStream ois = new ObjectInputStream(Detetive.peersSockets.get(turn).getSocket().getInputStream());
+        ObjectInputStream ois = new ObjectInputStream(Detetive.peersAcceptedSockets.get(turn).getSocket().getInputStream());
         telaDeJogo.showGuess((Guess) ois.readObject());
         totalPorrinhas += ((Guess) ois.readObject()).getPorrinhas();
         turn++;
