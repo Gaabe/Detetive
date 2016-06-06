@@ -15,6 +15,7 @@ import java.net.InetAddress;
 public class Player implements Serializable{
     private InetAddress ip;
     private String name;
+    private int port;
 
     /**
      * @return the ip
@@ -42,6 +43,20 @@ public class Player implements Serializable{
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the port
+     */
+    public int getPort() {
+        return port;
+    }
+
+    /**
+     * @param port the port to set
+     */
+    public void setPort(int port) {
+        this.port = port;
     }
     
 }

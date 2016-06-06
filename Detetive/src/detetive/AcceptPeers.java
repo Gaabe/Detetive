@@ -24,11 +24,12 @@ class AcceptPeers extends Thread {
     public void run(){
         while(true){
             try {
-                Jogador newJogador = new Jogador(Detetive.getPeerserver().accept(), "");
+                Jogador newJogador = new Jogador(Detetive.getPeerserver().accept(), "", 0);
                 System.out.println("Player accepted");
                 Detetive.getPeersAcceptedSockets().add(newJogador);
                 ObjectInputStream ois = new ObjectInputStream(newJogador.getSocket().getInputStream());
                 newJogador.setName((String) ois.readObject());
+                newJogador.setPort((int) ois.readObject());
                 System.out.println("Player name included");
                 if(!gameStarted){
                     Detetive.startGame();

@@ -37,6 +37,7 @@ public class Detetive {
     private static int myTurn;
     private static int porrinhas = -1;
     private static int totalPorrinhas = 0;
+    private static final int port = 2000 + (int) (Math.random() * 5000);
     
 
     /**
@@ -52,6 +53,7 @@ public class Detetive {
         JFrame frame = new JFrame("pop up frame");
         Detetive.setName(JOptionPane.showInputDialog(Detetive.telaDeJogo, "Choose a username"));
         oos.writeObject(getName());
+        oos.writeObject(port);
         System.out.println("connected to the server");
         telaDeJogo = new TelaInicio();
         Detetive.getTelaDeJogo().setVisible(true);
@@ -99,10 +101,11 @@ public class Detetive {
             } else {
                 try{
                     System.out.println(player.getIp().toString().subSequence(1, player.getIp().toString().length()));
-                    Jogador newJogador = new Jogador(new Socket((String) player.getIp().toString().subSequence(1, player.getIp().toString().length()), 10120), player.getName());
+                    Jogador newJogador = new Jogador(new Socket((String) player.getIp().toString().subSequence(1, player.getIp().toString().length()), player.getPort()), player.getName(), player.getPort());
                     Detetive.peersSockets.add(newJogador);
                     ObjectOutputStream oos = new ObjectOutputStream(newJogador.getSocket().getOutputStream());
                     oos.writeObject(Detetive.getName());
+                    oos.writeObject(player.getPort());
                 }catch(IOException e){
                     e.printStackTrace();
                 }

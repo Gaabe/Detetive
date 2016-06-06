@@ -42,11 +42,12 @@ public class DetetiveServer {
         System.out.println("Server is ready");
         while(true){
             try{
-                Jogador novoJogador = new Jogador(null, "");
+                Jogador novoJogador = new Jogador(null, "", 0);
                 novoJogador.setSocket(DetetiveServer.server.accept());
                 System.out.println("client accepted");
                 ObjectInputStream clientis = new ObjectInputStream(novoJogador.getSocket().getInputStream());
                 novoJogador.setName((String) clientis.readObject());
+                novoJogador.setPort((int)clientis.readObject());
                 DetetiveServer.clients.add(novoJogador);
                 System.out.println("New client connected");
                 DetetiveServer.informClients();
@@ -108,6 +109,7 @@ public class DetetiveServer {
             Player newPlayer = new Player();
             newPlayer.setIp(client.getSocket().getInetAddress());
             newPlayer.setName(client.getName());
+            newPlayer.setPort(client.getPort());
             clientsip.add(newPlayer);
         }
         for(Jogador client : clients){

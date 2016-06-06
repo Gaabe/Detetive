@@ -15,10 +15,12 @@ import java.net.Socket;
 public class Jogador implements Serializable{
     private Socket socket;
     private String name;
+    private int port;
     
-    public Jogador(Socket socket, String name){
+    public Jogador(Socket socket, String name, int port){
         this.socket = socket;
         this.name = name;
+        this.port = port;
     }
 
     /**
@@ -47,6 +49,20 @@ public class Jogador implements Serializable{
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the port
+     */
+    public int getPort() {
+        return port;
+    }
+
+    /**
+     * @param port the port to set
+     */
+    public void setPort(int port) {
+        this.port = port;
     }
     
 }

@@ -39,7 +39,7 @@ public class AcceptClients extends Thread{
         ObjectOutputStream oos = null;
         while(true){
             try{
-                Jogador novoJogador = new Jogador(null, "");
+                Jogador novoJogador = new Jogador(null, "", 0);
                 novoJogador.setSocket(server.accept());
                 ObjectInputStream clientis = new ObjectInputStream(novoJogador.getSocket().getInputStream());
                 Thread.sleep(2000);
