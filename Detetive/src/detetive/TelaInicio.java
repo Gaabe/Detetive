@@ -5,17 +5,24 @@
  */
 package detetive;
 
+import detetiveutils.Guess;
+import detetiveutils.Player;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JPanel;
 
 /**
  *
  * @author Igor
  */
 public class TelaInicio extends javax.swing.JFrame {
+    
+    private TelaJogo telaJogo;
 
     /**
      * Creates new form Tela
@@ -60,11 +67,7 @@ public class TelaInicio extends javax.swing.JFrame {
             }
         });
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        jList1.setModel(this.listPlayers());
         jScrollPane1.setViewportView(jList1);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
@@ -81,10 +84,10 @@ public class TelaInicio extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(89, 89, 89))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(286, 286, 286)
@@ -131,16 +134,25 @@ public class TelaInicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        jList1.setModel(this.listPlayers());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             AcceptPeers.gameStarted = true;
             Detetive.startGame();
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(TelaInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /*
+        TelaJogo jogo = new TelaJogo();
+        this.setSize(1280,720);
+        jPanel1.setSize(1280,720);
+        jogo.setSize(jPanel1.getWidth(), jPanel1.getHeight());
+        jPanel1.removeAll();
+        jPanel1.add(jogo, BorderLayout.CENTER);
+        jPanel1.repaint();
+         */ 
         
         /*
         TelaJogo jogo = new TelaJogo();
@@ -201,12 +213,27 @@ public class TelaInicio extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     void startGame() {
-        TelaJogo jogo = new TelaJogo();
-        this.setSize(1280,720);
-        jPanel1.setSize(1280,720);
-        jogo.setSize(jPanel1.getWidth(), jPanel1.getHeight());
+        telaJogo = new TelaJogo();
+        //this.setSize(600,300);
+        //jPanel1.setSize(1280,720);
+        telaJogo.setSize(jPanel1.getWidth(), jPanel1.getHeight());
         jPanel1.removeAll();
-        jPanel1.add(jogo, BorderLayout.CENTER);
+        jPanel1.add(telaJogo, BorderLayout.CENTER);
         jPanel1.repaint();
+        this.revalidate();
     }
+    
+    public DefaultListModel<String> listPlayers(){
+        DefaultListModel<String> playerNames = new DefaultListModel();
+        for(Player player : Detetive.getPeers()){
+            playerNames.addElement(player.getName());
+        }
+        return playerNames;
+    }
+
+    void showGuess(Guess guess) {
+        DefaultListModel listmodel = (DefaultListModel) telaJogo.getjList1().getModel();
+        listmodel.addElement(guess.getName()+ " " + guess.getChute());
+    }
+
 }

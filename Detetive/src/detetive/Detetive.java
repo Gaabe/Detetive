@@ -11,6 +11,7 @@ import detetiveutils.Player;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import static java.lang.Integer.parseInt;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -31,6 +32,11 @@ public class Detetive {
     private static ArrayList<Player> peers = new ArrayList();
     private static Thread t1;
     private static Thread t2;
+    private static int chute = 0;
+    private static int turn = 0;
+    private static int myTurn;
+    private static int porrinhas = -1;
+    private static int totalPorrinhas = 0;
     
 
     /**
@@ -41,7 +47,7 @@ public class Detetive {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 
         peerServer = new ServerSocket(10120);
-        Detetive.mainServer = new Socket("127.0.0.1", 4321);
+        Detetive.mainServer = new Socket("191.40.89.18", 4321);
         ObjectOutputStream oos = new ObjectOutputStream(Detetive.mainServer.getOutputStream());
         JFrame frame = new JFrame("pop up frame");
         Detetive.setName(JOptionPane.showInputDialog(Detetive.telaDeJogo, "Choose a username"));
@@ -65,29 +71,41 @@ public class Detetive {
     }
     
     
-    public static void startGame() throws IOException{
-       //jogo rolando
-       /*
-       OU SERVIDOR, OU PLAYER QUE DEU START (ADICIONAR VARIAVEL PARA CHECAR ISSO -> PREFERENCIAL)
-       pegar do Guess a lista de pessoas, lugares e armas, embaralhar e dividir para os players
-       DEFINIR OS TURNOS (QUEM COMEÇAR, ORDEM, ETC.)
-       */
-        //t1.interrupt();
-        //Detetive.mainServer.close();
+    public static void startGame() throws IOException, ClassNotFoundException{
         connectToPeers();
         telaDeJogo.startGame();
+        Detetive.checkTurn();
+        while(porrinhas < 0 || porrinhas > 3){
+            porrinhas = parseInt(JOptionPane.showInputDialog("Bote entre 0 e 3 porrinhas:"));
+        }
+        while(turn < Detetive.getPeers().size()){
+            if(turn == myTurn){
+                Detetive.guess();
+            }else{
+                Detetive.listen();     
+            }
+        }
+        if(totalPorrinhas == chute){
+            JOptionPane.showMessageDialog(telaDeJogo, "Você ganhou!");
+        }else{
+            JOptionPane.showMessageDialog(telaDeJogo, "Você perdeu seu porra!");
+        }
     }
 
-    private static void connectToPeers() throws IOException {
+    private static void connectToPeers() {
         //Função para pegar lista de ips e nomes e conectar com os pares
         for(Player player : peers){
             if(player.getName().equals(Detetive.name)){
             } else {
-                System.out.println(player.getIp().toString().subSequence(1, player.getIp().toString().length()));
-                Jogador newJogador = new Jogador(new Socket((String) player.getIp().toString().subSequence(1, player.getIp().toString().length()), 10120), player.getName());
-                Detetive.peersSockets.add(newJogador);
-                ObjectOutputStream oos = new ObjectOutputStream(newJogador.getSocket().getOutputStream());
-                oos.writeObject(Detetive.getName());
+                try{
+                    System.out.println(player.getIp().toString().subSequence(1, player.getIp().toString().length()));
+                    Jogador newJogador = new Jogador(new Socket((String) player.getIp().toString().subSequence(1, player.getIp().toString().length()), 10120), player.getName());
+                    Detetive.peersSockets.add(newJogador);
+                    ObjectOutputStream oos = new ObjectOutputStream(newJogador.getSocket().getOutputStream());
+                    oos.writeObject(Detetive.getName());
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
             }           
         }
     }
@@ -119,24 +137,32 @@ public class Detetive {
     public static void setName(String aName) {
         name = aName;
     }
-    
-    public void makeAccusation(ObjectOutputStream out) throws IOException{
-        Guess guess = new Guess(Guess.Person.CoronelMostarda, Guess.Place.Biblioteca, Guess.Weapon.Cano);
-        for(Jogador client : Detetive.peersSockets){
-            ObjectOutputStream out1 = new ObjectOutputStream(client.getSocket().getOutputStream());
-            out1.writeObject(guess);
-        }
-        //Se acusação certa, jogo termina
-        //Se acusação errada, jogador sai do jogo
-    }
-    
-    public void makeGuess(ObjectOutputStream out) throws IOException{
-        Guess guess = new Guess(Guess.Person.CoronelMostarda, Guess.Place.Biblioteca, Guess.Weapon.Cano);
-        for(Jogador client : Detetive.peersSockets){
-            ObjectOutputStream out1 = new ObjectOutputStream(client.getSocket().getOutputStream());
-            out1.writeObject(guess);
+
+    private static void checkTurn() {
+        for(int i = 0; i<Detetive.getPeers().size(); i++){
+            if (Detetive.getPeers().get(i).equals(Detetive.getName())){
+                myTurn = i;
+            }
         }
     }
+
+    private static void guess() throws IOException {
+        Detetive.chute = parseInt(JOptionPane.showInputDialog("Chute um numero:"));
+        Guess guess = new Guess(Detetive.name, chute, porrinhas);
+        for(Jogador jogador : Detetive.peersAcceptedSockets){
+            ObjectOutputStream oos = new ObjectOutputStream(jogador.getSocket().getOutputStream());
+            oos.writeObject(guess);
+        }
+        turn++;
+    }
+
+    private static void listen() throws IOException, ClassNotFoundException{
+        ObjectInputStream ois = new ObjectInputStream(Detetive.peersSockets.get(turn).getSocket().getInputStream());
+        telaDeJogo.showGuess((Guess) ois.readObject());
+        totalPorrinhas += ((Guess) ois.readObject()).getPorrinhas();
+        turn++;
+    }
+
 
 
     /**

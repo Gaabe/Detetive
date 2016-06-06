@@ -11,22 +11,56 @@ package detetiveutils;
  * @author Gabe
  */
 public class Guess {
-    public enum Person{
-        CoronelMostarda, DonaBranca, SrMarinho, DonaVioleta, ProfessorBlack, SrtaRosa
-    }
-    public enum Place{
-        Biblioteca, Cozinha, Hall, Escritório, Entrada , SalaDeEstar, SalaDeJantar, SalaDeMusica, SalaoDeFestas, SalaoDeJogos
-    }
-    public enum Weapon{
-        Castical, Cano, ChaveInglesa, Corda, Punhal, Revolver, Faca
-    }
-    private Person person;
-    private Place place;
-    private Weapon weapon;
     
-    public Guess(Person person, Place place, Weapon weapon){
-        this.person = person;
-        this.place = place;
-        this.weapon = weapon;
+    private String name;
+    private int chute;
+    private int porrinhas;
+    
+    public Guess(String name, int chute, int porrinhas){
+        this.name = name;
+        this.chute = chute;
+        this.porrinhas = porrinhas;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the chute
+     */
+    public int getChute() {
+        return chute;
+    }
+
+    /**
+     * @param chute the chute to set
+     */
+    public void setChute(int chute) {
+        this.chute = chute;
+    }
+
+    /**
+     * @return the porrinhas
+     */
+    public int getPorrinhas() {
+        return porrinhas;
+    }
+
+    /**
+     * @param porrinhas the porrinhas to set
+     */
+    public void setPorrinhas(int porrinhas) {
+        this.porrinhas = porrinhas;
     }
 }
