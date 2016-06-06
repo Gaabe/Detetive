@@ -24,11 +24,11 @@ public class Detetive {
 
     private static Socket mainServer;
     private static ServerSocket peerServer;
-    private static ArrayList<Jogador> peersSockets;
+    private static ArrayList<Jogador> peersSockets = new ArrayList();
     private static ArrayList<Jogador> peersAcceptedSockets = new ArrayList();
     private static TelaInicio telaDeJogo;
     private static String name;
-    private static ArrayList<Player> peers;
+    private static ArrayList<Player> peers = new ArrayList();
     private static Thread t1;
     private static Thread t2;
     

@@ -24,9 +24,11 @@ class AcceptPeers extends Thread {
         while(true){
             try {
                 Jogador newJogador = new Jogador(Detetive.getPeerserver().accept(), "");
+                System.out.println("Player accepted");
                 Detetive.getPeersAcceptedSockets().add(newJogador);
                 ObjectInputStream ois = new ObjectInputStream(newJogador.getSocket().getInputStream());
                 newJogador.setName((String) ois.readObject());
+                System.out.println("Player name included");
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(AcceptPeers.class.getName()).log(Level.SEVERE, null, ex);
             }
