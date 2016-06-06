@@ -16,7 +16,6 @@ import java.util.logging.Logger;
  * @author Igor
  */
 public class TelaInicio extends javax.swing.JFrame {
-    Detetive detetive;
 
     /**
      * Creates new form Tela
@@ -44,7 +43,6 @@ public class TelaInicio extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 600));
 
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 600));
 
@@ -72,7 +70,7 @@ public class TelaInicio extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel2.setText("DETETIVE");
 
-        jLabel1.setText("Jogador 1");
+        jLabel1.setText(Detetive.getName());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -138,9 +136,7 @@ public class TelaInicio extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            // TODO add your handling code here:
-            ObjectOutputStream oos = new ObjectOutputStream(detetive.getMainserver().getOutputStream());
-            oos.writeObject("Game Start");
+            Detetive.startGame();
         } catch (IOException ex) {
             Logger.getLogger(TelaInicio.class.getName()).log(Level.SEVERE, null, ex);
         }

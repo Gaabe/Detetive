@@ -29,6 +29,9 @@ public class Detetive {
     private static TelaInicio telaDeJogo;
     private static String name;
     private static ArrayList<Player> peers;
+    private static Thread t1;
+    private static Thread t2;
+    
 
     /**
      * @param args the command line arguments
@@ -38,25 +41,23 @@ public class Detetive {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 
         peerServer = new ServerSocket(1234);
-        telaDeJogo = new TelaInicio();
-        Detetive.mainServer = new Socket("127.0.0.1", 4321);
+        Detetive.mainServer = new Socket("191.40.88.64", 4321);
         ObjectOutputStream oos = new ObjectOutputStream(Detetive.mainServer.getOutputStream());
         JFrame frame = new JFrame("pop up frame");
-        Detetive.name = JOptionPane.showInputDialog(Detetive.telaDeJogo, "Choose a username");
-        oos.writeObject(name);
+        Detetive.setName(JOptionPane.showInputDialog(Detetive.telaDeJogo, "Choose a username"));
+        oos.writeObject(getName());
         System.out.println("connected to the server");
+        telaDeJogo = new TelaInicio();
+        Detetive.getTelaDeJogo().setVisible(true);
         
         UpdatePeers updatePeers = new UpdatePeers();       
-        Thread t1 = new Thread(updatePeers);
+        t1 = new Thread(updatePeers);
         t1.start();
         
         AcceptPeers acceptPeers = new AcceptPeers();
-        Thread t2 = new Thread(acceptPeers);
+        t2 = new Thread(acceptPeers);
         t2.start();
         
-        if (false){
-            startGame();
-        }
         
         t1.join();
         t2.join();
@@ -71,19 +72,20 @@ public class Detetive {
        pegar do Guess a lista de pessoas, lugares e armas, embaralhar e dividir para os players
        DEFINIR OS TURNOS (QUEM COMEÇAR, ORDEM, ETC.)
        */
-       Detetive.mainServer.close();
-       connectToPeers();
-       
+        //t1.interrupt();
+        //Detetive.mainServer.close();
+        connectToPeers();
     }
 
     private static void connectToPeers() throws IOException {
         //Função para pegar lista de ips e nomes e conectar com os pares
         for(Player player : peers){
-            Jogador newJogador = new Jogador(new Socket(player.getIp(), 1234), player.getName());
-            Detetive.peersSockets.add(newJogador);
-            ObjectOutputStream oos = new ObjectOutputStream(newJogador.getSocket().getOutputStream());
-            oos.writeObject(Detetive.name);
-            
+            if(!(player.getName().equals(name))){
+                Jogador newJogador = new Jogador(new Socket(player.getIp(), 1234), player.getName());
+                Detetive.peersSockets.add(newJogador);
+                ObjectOutputStream oos = new ObjectOutputStream(newJogador.getSocket().getOutputStream());
+                oos.writeObject(Detetive.getName());
+            }           
         }
     }
 
@@ -99,6 +101,20 @@ public class Detetive {
      */
     public static void setPeersAcceptedSockets(ArrayList<Jogador> aPeersAcceptedSockets) {
         peersAcceptedSockets = aPeersAcceptedSockets;
+    }
+
+    /**
+     * @return the name
+     */
+    public static String getName() {
+        return name;
+    }
+
+    /**
+     * @param aName the name to set
+     */
+    public static void setName(String aName) {
+        name = aName;
     }
     
     public void makeAccusation(ObjectOutputStream out) throws IOException{
