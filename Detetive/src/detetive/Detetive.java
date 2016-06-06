@@ -81,6 +81,7 @@ public class Detetive {
         //Função para pegar lista de ips e nomes e conectar com os pares
         for(Player player : peers){
             if(!(player.getName().equals(name))){
+                System.out.println(player.getIp().toString().subSequence(1, player.getIp().toString().length()));
                 Jogador newJogador = new Jogador(new Socket(player.getIp(), 1234), player.getName());
                 Detetive.peersSockets.add(newJogador);
                 ObjectOutputStream oos = new ObjectOutputStream(newJogador.getSocket().getOutputStream());
